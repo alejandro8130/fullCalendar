@@ -11,10 +11,42 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="model.Reservas"%>
 <%@page import="model.Ambientes"%>
+<%@page import="model.Programaciones"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
+    ArrayList<Ambientes> listarAmbientes = new ArrayList<>();
     ArrayList<Reservas> listarReservas = new ArrayList<>();
     try {
+        try {
+            conectadb con = new conectadb();
+            Connection cnn = con.conectar();
+            Statement stm = cnn.createStatement();
+            String queryAmbientes = "SELECT Ambientes.id,Ambientes.ambiente,Programaciones.horaInicio,Programaciones.horaFin FROM Ambientes INNER JOIN Programaciones ON Ambientes.programacion_id=Programaciones.id;";
+            System.out.println(queryAmbientes);
+            ResultSet rs = stm.executeQuery(queryAmbientes);
+            while (rs.next()) {
+                Ambientes ambiente = new Ambientes();
+                Programaciones programacionId = new Programaciones();
+                int id = Integer.parseInt(rs.getString(1));
+                String nombreAmbiente = rs.getString(2);
+                programacionId.setHoraInicio(rs.getTime(3));
+                programacionId.setHoraInicio(rs.getTime(4));
+
+                ambiente.setId(id);
+                ambiente.setAmbiente(nombreAmbiente);
+                ambiente.setProgramacionId(programacionId);
+
+                listarAmbientes.add(ambiente);
+
+            }
+
+            rs.close();
+            cnn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("error");
+
+        }
         conectadb con = new conectadb();
         Connection cnn = con.conectar();
         Statement stm = cnn.createStatement();
@@ -76,8 +108,8 @@
                         {
                             id: <%= c.getId()%>,
                             title: '<%= c.getNombre()%>',
-                            start: '<%= c.getFechaInicio()%>',
-                            end: '<%= c.getFechaFinal()%>'
+                            start: '<%= c.getFechaInicio()%>T16:00:00',
+                            end: '<%= c.getFechaFinal()%>T20:00:00'
                         },
             <% }%>
                     ]

@@ -18,7 +18,7 @@
         conectadb con = new conectadb();
         Connection cnn = con.conectar();
         Statement stm = cnn.createStatement();
-        String queryReservas = "SELECT Reservas.nombre,Ambientes.ambiente,Reservas.fechaInicio,Reservas.fechaFinal FROM Reservas INNER JOIN Ambientes ON Reservas.ambiente_id=ambiente_id;";
+        String queryReservas = "SELECT Reservas.id,Reservas.nombre,Ambientes.ambiente,Reservas.fechaInicio,Reservas.fechaFinal FROM Reservas INNER JOIN Ambientes ON Reservas.ambiente_id=ambiente_id;";
         System.out.println(queryReservas);
         ResultSet rs = stm.executeQuery(queryReservas);
         while (rs.next()) {

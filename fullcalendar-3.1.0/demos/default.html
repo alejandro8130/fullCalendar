@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<link href='../fullcalendar.min.css' rel='stylesheet' />
+<link href='../fullcalendar.print.min.css' rel='stylesheet' media='print' />
+<script src='../lib/moment.min.js'></script>
+<script src='../lib/jquery.min.js'></script>
+<script src='../fullcalendar.min.js'></script>
+<script>
+
+	$(document).ready(function() {
+
+		$('#calendar').fullCalendar({
+			defaultDate: '2016-12-12',
+			editable: true,
+			eventLimit: true, // allow "more" link when too many events
+			events: [
+				{
+					title: 'All Day Event',
+					start: '2016-12-01'
+				},
+				{
+					title: 'Long Event',
+					start: '2016-12-07',
+					end: '2016-12-10'
+				},
+				{
+					id: 999,
+					title: 'Repeating Event',
+					start: '2016-12-09T16:00:00'
+				},
+				{
+					id: 999,
+					title: 'Repeating Event',
+					start: '2016-12-16T16:00:00'
+				},
+				{
+					title: 'Conference',
+					start: '2016-12-11',
+					end: '2016-12-13'
+				},
+				{
+					title: 'Meeting',
+					start: '2016-12-12T10:30:00',
+					end: '2016-12-12T12:30:00'
+				},
+				{
+					title: 'Lunch',
+					start: '2016-12-12T12:00:00'
+				},
+				{
+					title: 'Meeting',
+					start: '2016-12-12T14:30:00'
+				},
+				{
+					title: 'Happy Hour',
+					start: '2016-12-12T17:30:00'
+				},
+				{
+					title: 'Dinner',
+					start: '2016-12-12T20:00:00'
+				},
+				{
+					title: 'Birthday Party',
+					start: '2016-12-13T07:00:00'
+				},
+				{
+					title: 'Click for Google',
+					url: 'http://google.com/',
+					start: '2016-12-28'
+				}
+			]
+		});
+		
+	});
+
+</script>
+<style>
+
+	body {
+		margin: 40px 10px;
+		padding: 0;
+		font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+		font-size: 14px;
+	}
+
+	#calendar {
+		max-width: 900px;
+		margin: 0 auto;
+	}
+
+</style>
+</head>
+<body>
+
+	<div id='calendar'></div>
+
+</body>
+</html>
+
+CREATE TABLE Reservas (
+  id INTEGER AUTO_INCREMENT NOT NULL,
+  nombre VARCHAR(30) NOT NULL,
+  ambiente_id INTEGER NOT NULL,
+  fechaInicio DATE NOT NULL,
+  fechaFinal DATE NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE Ambientes (
+  id INTEGER AUTO_INCREMENT NOT NULL,
+  ambiente VARCHAR(30) NOT NULL,
+  programacion_id INTEGER NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE Programaciones (
+  id INTEGER AUTO_INCREMENT NOT NULL,
+  horaInicio TIME NOT NULL,
+  horaFin TIME NOT NULL,
+  PRIMARY KEY (id)
+);
+
+ALTER TABLE Reservas ADD FOREIGN KEY (ambiente_id) REFERENCES Ambientes (id);
+ALTER TABLE Ambientes ADD FOREIGN KEY (programacion_id) REFERENCES Programaciones (id);
+
+
+Insert into Programaciones (horaInicio,horaFin) values ('06:00:00','12:00:00');
+Insert into Programaciones (horaInicio,horaFin) values ('12:00:00','17:00:00');
+Insert into Programaciones (horaInicio,horaFin) values ('17:00:00','21:00:00');
+Insert into Ambientes (ambiente,programacion_id) values ('101',1);
+Insert into Ambientes (ambiente,programacion_id) values ('101',2);
+Insert into Ambientes (ambiente,programacion_id) values ('101',3);
+Insert into Reservas (nombre,ambiente_id,fechaInicio,fechaFinal) values ('Alejo',1,'2016-12-09','2016-12-09');
+
+SELECT Ambientes.ambiente,Programaciones.horaInicio,Programaciones.horaFin FROM Ambientes INNER JOIN Programaciones ON Ambientes.programacion_id=Programaciones.id;
+SELECT Reservas.nombre,Ambiente.ambiente,Reservas.fechaInicio,Reservas.fechaFinal FROM Reservas INNER JOIN Ambientes ON Reservas.ambiente_id=ambiente_id;
+
